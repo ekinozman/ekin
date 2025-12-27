@@ -1,0 +1,176 @@
+AttachSpec("klngpspec");
+import "bianchi.m" : QuatToMatrix; /* Returns matrix generators */
+import "geometry/volumes.m" : ComputeZetas;
+print "precomputing coefficients...";
+zetas := ComputeZetas(100);
+print "...done.\n\n";
+
+
+Gamma0_abel:=function(Gen, G, Generators);
+Mat0 := [QuatToMatrix(g) : g in Generators];
+	K := Parent(Mat0[1][1,1]);
+	OK2 := IntegerRing(K);
+	R := MatrixAlgebra(OK2,2);
+	MatGen := [R ! m : m in Mat0];
+	genIOK2:=[];
+    for gi in Gen do genIOK2:=Include(genIOK2, OK2!gi); 
+    end for;
+    I:=ideal<OK2| genIOK2>;
+    PL,r := ProjectiveLine(quo<OK2|I>);
+	proj_action := function(M,i)
+		t,im :=r(PL[i]*M,true,false);
+		return Index(PL,im);
+end function;
+
+
+	Seq := [[] : m in MatGen];
+	for j in [1..#Seq] do
+		for i in [1..#PL] do
+			Append(~Seq[j], proj_action(MatGen[j],i));
+		end for;
+         end for;
+
+	Symm := Sym(#PL);
+	p := [Symm!el : el in Seq];
+
+	f := hom<G -> Symm | p>;
+	H := sub<G | f>;
+
+	return AQInvariants(H);
+end function;
+
+PresPGL2 := function(d)
+	O := BianchiOrder(d);
+	_, Faces, Edges := NormalizedBasis(O : GroupType :="Units", zetas := zetas);
+	PG, PGenerators := Presentation(Faces, Edges, O);
+	return PG, PGenerators;
+end function;
+
+
+Abelianization := function(d, Gen)
+	PG, PGenerators := PresPGL2(d);
+    
+	return Gamma0_abel(Gen, PG, PGenerators);
+end function;
+
+
+****************************************************
+
+d:=-7;
+R<x> := PolynomialRing(Rationals());
+K := NumberField(x^2-d);
+OK := IntegerRing(K);
+lamda:= Factorization(3*OK)[1][1];
+Beta:=Factorization(7*OK)[1][1];
+
+GenG:=Generators(Beta*lamda); 
+Gen:=[];
+   for gg in GenG do 
+       Gen:=Include(Gen, [Integers()!gg[1], Integers()!gg[2]]); 
+   end for;
+
+GenG2:=Generators(Beta); 
+Gen2:=[];
+   for gg in GenG2 do 
+       Gen2:=Include(Gen2, [Integers()!gg[1], Integers()!gg[2]]); 
+   end for;
+
+//result for the field Q(sqrt(-7))
+ Abelianization(d,Gen);
+ Abelianization(d,Gen2);
+
+>  Abelianization(d,Gen);
+[ 2, 2, 2, 4, 12, 0 ]
+>  Abelianization(d,Gen2);
+[ 2, 2, 6 ]
+
+****************************************************
+
+
+d:=-19;
+R<x> := PolynomialRing(Rationals());
+K := NumberField(x^2-d);
+OK := IntegerRing(K);
+lamda:= Factorization(3*OK)[1][1];
+Beta:=Factorization(19*OK)[1][1];
+
+GenG:=Generators(Beta*lamda); 
+Gen:=[];
+   for gg in GenG do 
+       Gen:=Include(Gen, [Integers()!gg[1], Integers()!gg[2]]); 
+   end for;
+
+GenG2:=Generators(Beta); 
+Gen2:=[];
+   for gg in GenG2 do 
+       Gen2:=Include(Gen2, [Integers()!gg[1], Integers()!gg[2]]); 
+   end for;
+
+//result for the field Q(sqrt(-19))
+ Abelianization(d,Gen);
+ Abelianization(d,Gen2);
+
+>  Abelianization(d,Gen);
+[ 2, 2, 2, 2, 2, 4, 12, 0, 0, 0, 0, 0 ]
+>  Abelianization(d,Gen2);
+[ 2, 6, 0 ]
+
+****************************************************
+
+d:=-43;
+R<x> := PolynomialRing(Rationals());
+K := NumberField(x^2-d);
+OK := IntegerRing(K);
+lamda:= Factorization(3*OK)[1][1];
+Beta:=Factorization(43*OK)[1][1];
+
+GenG:=Generators(Beta*lamda); 
+Gen:=[];
+   for gg in GenG do 
+       Gen:=Include(Gen, [Integers()!gg[1], Integers()!gg[2]]); 
+   end for;
+
+GenG2:=Generators(Beta); 
+Gen2:=[];
+   for gg in GenG2 do 
+       Gen2:=Include(Gen2, [Integers()!gg[1], Integers()!gg[2]]); 
+   end for;
+
+//result for the field Q(sqrt(-43))
+ Abelianization(d,Gen);
+ Abelianization(d,Gen2);
+
+>  Abelianization(d,Gen);
+[ 2, 2, 2, 2, 2, 2, 6, 18, 36, 36, 36, 91116, 182232, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+>  Abelianization(d,Gen2);
+[ 2, 2, 2, 6, 0, 0, 0, 0, 0 ]
+
+****************************************************
+
+d:=-67;
+R<x> := PolynomialRing(Rationals());
+K := NumberField(x^2-d);
+OK := IntegerRing(K);
+lamda:= Factorization(3*OK)[1][1];
+Beta:=Factorization(67*OK)[1][1];
+
+GenG:=Generators(Beta*lamda); 
+Gen:=[];
+   for gg in GenG do 
+       Gen:=Include(Gen, [Integers()!gg[1], Integers()!gg[2]]); 
+   end for;
+
+GenG2:=Generators(Beta); 
+Gen2:=[];
+   for gg in GenG2 do 
+       Gen2:=Include(Gen2, [Integers()!gg[1], Integers()!gg[2]]); 
+   end for;
+
+//result for the field Q(sqrt(-67))
+ Abelianization(d,Gen);
+ Abelianization(d,Gen2);
+>  Abelianization(d,Gen);
+[ 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 4, 4, 4, 4, 4, 4, 8, 8, 8, 8, 8, 8, 8, 8, 32, 96, 3360, 3360, 55228727052582665332322880,55228727052582665332322880, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+>  Abelianization(d,Gen2);
+[ 3, 210, 210, 0, 0, 0, 0, 0 ]
+
